@@ -2,8 +2,13 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { HairlineBridge } from '@/components/hairline/HairlineBridge';
+import { DEFAULT_SITE_SETTINGS, type SiteSettings } from '@/lib/cms-types';
 
-export function CinematicHero() {
+export function CinematicHero({
+  settings = DEFAULT_SITE_SETTINGS,
+}: {
+  settings?: SiteSettings;
+}) {
   const [isOpened, setIsOpened] = useState(false);
   const [isTapped, setIsTapped] = useState(false);
   const [cardTilt, setCardTilt] = useState({ rx: 0, ry: 0, gx: 50, gy: 50 });
@@ -321,18 +326,17 @@ export function CinematicHero() {
         <div className="noir-hero-content">
           <div className="noir-kicker">
             <span className="noir-kicker-dot" />
-            <span className="noir-kicker-text">Unique Identity Craft</span>
+            <span className="noir-kicker-text">{settings.hero_kicker}</span>
           </div>
 
           <h1 className="noir-headline">
-            Forging digital presence that
+            {settings.hero_headline}
             <br />
-            <span className="noir-highlight">refuses to be overlooked.</span>
+            <span className="noir-highlight">{settings.hero_highlight}</span>
           </h1>
 
           <p className="noir-editorial-copy">
-            Independent creative studio building memorable identities, high-conversion
-            digital experiences, and contactless NFC systems for ambitious companies.
+            {settings.hero_copy}
           </p>
 
           <div className="noir-cta-group">
@@ -382,7 +386,7 @@ export function CinematicHero() {
           {/* The Emerging Visor Figure */}
           <div className="noir-figure-wrap">
             <img
-              src="/images/hero-noir-figure.jpg"
+              src={settings.hero_image_url || '/images/hero-noir-figure.jpg'}
               alt="UIC Visionary"
               className="noir-figure-img"
               loading="eager"

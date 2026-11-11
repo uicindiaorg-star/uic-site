@@ -1,6 +1,11 @@
 import { ChevronDown } from 'lucide-react';
+import { DEFAULT_SERVICES, type CmsService } from '@/lib/cms-types';
 
-export function ServicesSection() {
+export function ServicesSection({
+  services = DEFAULT_SERVICES,
+}: {
+  services?: CmsService[];
+}) {
   return (
     <section className="services section" id="services">
       <div className="section-kicker">
@@ -37,78 +42,23 @@ export function ServicesSection() {
           </a>
         </div>
         <div className="service-list">
-          <details open={true}>
-            <summary>
-              <span>01</span> Brand &amp; identity
-              <ChevronDown
-                className="service-expand-icon"
-                size={18}
-                strokeWidth={2.2}
-                aria-hidden="true"
-              />
-            </summary>
-            <div>
-              <p>
-                A clear story. A distinctive visual language. An identity that feels unmistakably
-                yours.
-              </p>
-              <small>STRATEGY · NAMING · VISUAL IDENTITY · BRAND GUIDELINES</small>
-            </div>
-          </details>
-          <details>
-            <summary>
-              <span>02</span> Websites &amp; experiences
-              <ChevronDown
-                className="service-expand-icon"
-                size={18}
-                strokeWidth={2.2}
-                aria-hidden="true"
-              />
-            </summary>
-            <div>
-              <p>
-                Fast, intuitive digital spaces that make your brand tangible and turn interest into
-                action.
-              </p>
-              <small>UX/UI · DEVELOPMENT · E-COMMERCE · WEB APPLICATIONS</small>
-            </div>
-          </details>
-          <details>
-            <summary>
-              <span>03</span> ERP &amp; business systems
-              <ChevronDown
-                className="service-expand-icon"
-                size={18}
-                strokeWidth={2.2}
-                aria-hidden="true"
-              />
-            </summary>
-            <div>
-              <p>
-                Bring your operations together with useful tools, connected data and workflows built
-                for your team.
-              </p>
-              <small>CUSTOM ERP · DASHBOARDS · INTEGRATIONS · AUTOMATION</small>
-            </div>
-          </details>
-          <details>
-            <summary>
-              <span>04</span> NFC &amp; connected products
-              <ChevronDown
-                className="service-expand-icon"
-                size={18}
-                strokeWidth={2.2}
-                aria-hidden="true"
-              />
-            </summary>
-            <div>
-              <p>
-                Bridge the physical and digital with a simple tap — from smart business cards to
-                product experiences.
-              </p>
-              <small>NFC CARDS · DIGITAL PROFILES · SMART TOUCHPOINTS</small>
-            </div>
-          </details>
+          {services.map((service) => (
+            <details key={service.id} open={service.is_default_open}>
+              <summary>
+                <span>{service.number_label}</span> {service.title}
+                <ChevronDown
+                  className="service-expand-icon"
+                  size={18}
+                  strokeWidth={2.2}
+                  aria-hidden="true"
+                />
+              </summary>
+              <div>
+                <p>{service.description}</p>
+                <small>{service.tags}</small>
+              </div>
+            </details>
+          ))}
         </div>
       </div>
     </section>

@@ -1,18 +1,27 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { Fragment, useEffect, useRef, useState, type CSSProperties } from 'react';
 import { ArrowUpRight, RotateCw, Check } from 'lucide-react';
+import {
+  DEFAULT_NFC_FINISHES,
+  DEFAULT_NFC_STYLES,
+  DEFAULT_SITE_SETTINGS,
+  type CmsNfcStyle,
+  type NfcFinishPreset,
+  type SiteSettings,
+} from '@/lib/cms-types';
 import styles from './CardStudio.module.css';
 
-const finishes = [
-  { name: 'Midnight', background: '#222b28', ink: '#e3ff97' },
-  { name: 'Lime', background: '#2CFF05', ink: '#0A0C0E' },
-  { name: 'Bone', background: '#ede9df', ink: '#203027' },
-  { name: 'Obsidian', background: '#121614', ink: '#ede7dc' },
-];
-const layouts = ['Minimal', 'Orbit', 'Statement'] as const;
-type Layout = (typeof layouts)[number];
+function renderLines(text: string) {
+  const lines = text.split('\n');
+  return lines.map((line, idx) => (
+    <Fragment key={`${line}-${idx}`}>
+      {line}
+      {idx < lines.length - 1 ? <br /> : null}
+    </Fragment>
+  ));
+}
 
 function customFinish(hex: string) {
   const channels = [1, 3, 5].map((offset) => {
@@ -23,11 +32,29 @@ function customFinish(hex: string) {
   return { name: 'Custom', background: hex, ink: luminance > 0.179 ? '#000000' : '#ffffff' };
 }
 
-export function CardStudio() {
+export function CardStudio({
+  settings = DEFAULT_SITE_SETTINGS,
+  cardStyles = DEFAULT_NFC_STYLES,
+}: {
+  settings?: SiteSettings;
+  cardStyles?: CmsNfcStyle[];
+}) {
+  const finishes: NfcFinishPreset[] =
+    Array.isArray(settings.nfc_finishes_json) && settings.nfc_finishes_json.length > 0
+      ? settings.nfc_finishes_json
+      : DEFAULT_NFC_FINISHES;
+  const availableStyles: CmsNfcStyle[] =
+    cardStyles.length > 0 ? cardStyles : DEFAULT_NFC_STYLES;
+
+  const initialStyle =
+    availableStyles.find((s) => s.layout_variant === 'orbit') ?? availableStyles[0];
+
   const [finish, setFinish] = useState(finishes[0]);
   const [hexInput, setHexInput] = useState(finishes[0].background);
   const validHex = /^#[0-9a-f]{6}$/i.test(hexInput);
-  const [layout, setLayout] = useState<Layout>('Orbit');
+  const [selectedStyleId, setSelectedStyleId] = useState<string | number>(initialStyle.id);
+  const activeStyle =
+    availableStyles.find((s) => String(s.id) === String(selectedStyleId)) ?? availableStyles[0];
   const [name, setName] = useState('John Honai');
   const [role, setRole] = useState('Designer & creative thinker');
   const [brand, setBrand] = useState('John Studio');
@@ -58,13 +85,23 @@ export function CardStudio() {
     .map((part) => part[0])
     .join('');
   const textColor = ink === 'auto' ? finish.ink : ink;
+  const effectiveArtworkUrl = artwork?.url || activeStyle.artwork_url || '';
   const colors = {
     '--card-color': finish.background,
     '--card-ink': textColor,
-    '--card-artwork': artwork ? `url("${artwork.url}")` : 'none',
-    '--artwork-opacity': opacity / 100,
+    '--card-radius': `${activeStyle.corner_radius ?? 16}px`,
+    '--card-artwork': effectiveArtworkUrl ? `url("${effectiveArtworkUrl}")` : 'none',
+    '--artwork-opacity': effectiveArtworkUrl
+      ? artwork
+        ? opacity / 100
+        : 0.45
+      : 0,
     '--artwork-position': `50% ${position}%`,
     '--artwork-size': fit,
+    '--nfc-page-bg': settings.nfc_page_bg || '#f4f3ee',
+    '--nfc-preview-bg': settings.nfc_preview_bg || '#e3e8da',
+    '--nfc-panel-bg': settings.nfc_panel_bg || '#fffefa',
+    '--nfc-page-ink': settings.nfc_page_ink || '#242c27',
   } as CSSProperties;
 
   async function uploadArtwork(file?: File) {
@@ -159,9 +196,20 @@ export function CardStudio() {
       </a>
       <header className={styles.header}>
         <Link href="/" className={styles.logo} aria-label="UIC home">
-          uic<span>®</span>
+          {settings.logo_image_url ? (
+            <img
+              src={settings.logo_image_url}
+              alt={`${settings.logo_text || 'uic'} logo`}
+              className={styles.logoImg}
+            />
+          ) : (
+            <>
+              {settings.logo_text || 'uic'}
+              {settings.logo_mark ? <span>{settings.logo_mark}</span> : null}
+            </>
+          )}
         </Link>
-        <span className={styles.productName}>CONNECT / A BETTER HELLO</span>
+        <span className={styles.productName}>{settings.nfc_page_tagline}</span>
         <Link href="/#nfc" className={styles.back} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
           <span>Back to studio</span>
           <ArrowUpRight size={13} strokeWidth={2.2} aria-hidden="true" />
@@ -170,12 +218,12 @@ export function CardStudio() {
       <main id="card-studio">
         <section className={styles.intro}>
           <h1>
-            Small card.
+            {settings.nfc_page_title_prefix}
             <br />
-            <em>Big first impression.</em>
+            <em>{settings.nfc_page_title_em}</em>
           </h1>
           <p className={styles.subtitle}>
-            Make it yours. Give it a spin. See what a single tap can do.
+            {settings.nfc_page_subtitle}
           </p>
           <span className={styles.guest}>
             Guest studio <span>•</span> No sign-up needed
@@ -201,12 +249,18 @@ export function CardStudio() {
               >
                 <span
                   ref={frontRef}
-                  className={`${styles.face} ${styles[layout.toLowerCase()]} ${styles.front}`}
+                  className={`${styles.face} ${styles[activeStyle.layout_variant] ?? styles.minimal} ${
+                    activeStyle.font_variant === 'serif'
+                      ? styles.fontSerif
+                      : activeStyle.font_variant === 'mono'
+                        ? styles.fontMono
+                        : ''
+                  } ${styles.front}`}
                   aria-hidden={flipped}
                 >
                   <span className={styles.cardBrand}>
                     {displayBrand}
-                    <span className={styles.signal}>)))</span>
+                    {activeStyle.show_signal ? <span className={styles.signal}>)))</span> : null}
                   </span>
                   <span className={styles.orbitArt} />
                   <span className={styles.monogram}>{initials}</span>
@@ -215,27 +269,32 @@ export function CardStudio() {
                     <small>{role || 'Your title or tagline'}</small>
                   </span>
                   <span className={styles.cardFooter}>
-                    A CONNECTION WORTH MAKING.<b>uic / connect</b>
+                    {activeStyle.card_footer_text}
+                    <b>{activeStyle.card_badge_text}</b>
                   </span>
                 </span>
                 <span
                   ref={backRef}
-                  className={`${styles.face} ${styles.reverse}`}
+                  className={`${styles.face} ${styles.reverse} ${
+                    activeStyle.font_variant === 'serif'
+                      ? styles.fontSerif
+                      : activeStyle.font_variant === 'mono'
+                        ? styles.fontMono
+                        : ''
+                  }`}
                   aria-hidden={!flipped}
                 >
                   <span className={styles.cardBrand}>
                     {displayBrand}
-                    <span className={styles.signal}>)))</span>
+                    {activeStyle.show_signal ? <span className={styles.signal}>)))</span> : null}
                   </span>
-                  <strong>
-                    A little tap.
-                    <br />A whole new connection.
-                  </strong>
+                  <strong>{renderLines(activeStyle.back_headline)}</strong>
                   <span className={styles.reverseMark} aria-hidden="true">
                     <ArrowUpRight size={48} strokeWidth={1.8} />
                   </span>
                   <span className={styles.cardFooter}>
-                    HOLD NEAR AN NFC-ENABLED PHONE.<b>uic / connect</b>
+                    {activeStyle.back_footer_text}
+                    <b>{activeStyle.card_badge_text}</b>
                   </span>
                 </span>
               </button>
@@ -250,7 +309,7 @@ export function CardStudio() {
                 <span>{flipped ? 'View front' : 'Flip card'}</span>
               </button>
               <span>
-                {finish.name} / {layout}
+                {finish.name} / {activeStyle.name}
               </span>
             </div>
             <p className={styles.previewNote}>
@@ -404,20 +463,40 @@ export function CardStudio() {
             </fieldset>
             <fieldset>
               <legend>
-                <span>03</span> Find your style
+                <span>03</span> Find your style <small>{activeStyle.name}</small>
               </legend>
               <div className={styles.layouts}>
-                {layouts.map((option) => (
+                {availableStyles.map((option) => (
                   <button
-                    key={option}
+                    key={option.id}
                     type="button"
-                    aria-pressed={layout === option}
-                    onClick={() => setLayout(option)}
+                    aria-pressed={String(activeStyle.id) === String(option.id)}
+                    onClick={() => setSelectedStyleId(option.id)}
                   >
-                    {option}
+                    {option.name}
                   </button>
                 ))}
               </div>
+              {activeStyle.description ? (
+                <p className={styles.styleDescription}>{activeStyle.description}</p>
+              ) : null}
+              {finish.background.toLowerCase() !== activeStyle.default_bg.toLowerCase() ? (
+                <button
+                  type="button"
+                  className={styles.flipButton}
+                  style={{ marginTop: '10px', fontSize: '10px', padding: '6px 12px' }}
+                  onClick={() => {
+                    setFinish({
+                      name: activeStyle.name,
+                      background: activeStyle.default_bg,
+                      ink: activeStyle.default_ink,
+                    });
+                    setHexInput(activeStyle.default_bg);
+                  }}
+                >
+                  Apply {activeStyle.name} palette
+                </button>
+              ) : null}
             </fieldset>
             <fieldset>
               <legend>
@@ -600,9 +679,20 @@ export function CardStudio() {
       </main>
       <footer className={styles.footer}>
         <Link href="/" className={styles.logo}>
-          uic<span>®</span>
+          {settings.logo_image_url ? (
+            <img
+              src={settings.logo_image_url}
+              alt={`${settings.logo_text || 'uic'} logo`}
+              className={styles.logoImg}
+            />
+          ) : (
+            <>
+              {settings.logo_text || 'uic'}
+              {settings.logo_mark ? <span>{settings.logo_mark}</span> : null}
+            </>
+          )}
         </Link>
-        <span>UNIQUE IDENTITY. EVERY CONNECTION.</span>
+        <span>{settings.nfc_page_footer_tagline}</span>
         <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
           <span>Back to UIC</span>
           <ArrowUpRight size={13} strokeWidth={2.2} />

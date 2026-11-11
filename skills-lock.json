@@ -1,17 +1,29 @@
 {
-  "version": 1,
+  "version": 2,
   "skills": {
     "hairline-adopt": {
       "source": "lucasmarkes/hairline",
       "sourceType": "github",
       "skillPath": "skills/hairline-adopt/SKILL.md",
-      "computedHash": "cd2a2f78693b81e495b878fdd88f054bfc6757b265f180eb9706c0adc27aa3f0"
+      "computedHash": "d4edc63a5894714202043b8b591ad6ef568b1f9ec4f3e8ef003d0765cf55914f"
     },
     "hairline-create": {
       "source": "lucasmarkes/hairline",
       "sourceType": "github",
       "skillPath": "skills/hairline-create/SKILL.md",
-      "computedHash": "4f65f4126b664736d040c4d6d0d2ce340441787887b90b8de40962ddf48ae74d"
+      "computedHash": "e594dafa7ac7f2c02939ba7863b46ee4789375931bc53267dec8b2b029cea3a4"
+    },
+    "supabase": {
+      "source": "supabase/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/supabase/SKILL.md",
+      "computedHash": "2fbff32fd63b7d31585cacf0ed43e5bf8d05dd20d6c0c751d256cb967a00eec1"
+    },
+    "supabase-postgres-best-practices": {
+      "source": "supabase/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/supabase-postgres-best-practices/SKILL.md",
+      "computedHash": "3eb972c2d7c818e544e35cc33ea8d7147d4d78ae08142ef40037b0fbac7a2505"
     }
   }
 }

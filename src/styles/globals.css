@@ -4,6 +4,13 @@
   --paper: #f4f3ee;
   --muted: #6b6d67;
   --accent: #2CFF05;
+  --header-bg: #EDE7DC;
+  --header-text: #0A0C0E;
+  --footer-bg: #17201C;
+  --footer-text: #DCE5DC;
+  --work-bg: #E9EAE3;
+  --nfc-bg: #E5E9DF;
+  --contact-bg: var(--accent);
   --p: 0;
 }
 * {
@@ -38,7 +45,7 @@ summary:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 3px solid #2CFF05;
+  outline: 3px solid var(--accent);
   outline-offset: 6px;
 }
 .skip {
@@ -82,8 +89,8 @@ textarea:focus-visible {
   line-height: 1;
   font-family: 'Manrope', sans-serif;
   text-decoration: none;
-  color: #2CFF05 !important;
-  -webkit-text-fill-color: #2CFF05;
+  color: var(--accent) !important;
+  -webkit-text-fill-color: var(--accent);
   -webkit-text-stroke: 1px #ffffff;
   paint-order: stroke fill;
   transition: opacity 0.3s ease;
@@ -95,9 +102,17 @@ textarea:focus-visible {
   vertical-align: top;
   margin: 6px 0 0 4px;
   display: inline-block;
-  color: #2CFF05 !important;
-  -webkit-text-fill-color: #2CFF05;
+  color: var(--accent) !important;
+  -webkit-text-fill-color: var(--accent);
   -webkit-text-stroke: 0.4px #ffffff;
+}
+
+.logo-img {
+  height: 36px;
+  width: auto;
+  max-width: 160px;
+  object-fit: contain;
+  display: block;
 }
 
 .wordmark {
@@ -138,10 +153,10 @@ textarea:focus-visible {
   color: var(--portal-bg);
 }
 .header.is-hero-closed:not(.is-scrolled) .logo {
-  color: #2CFF05 !important;
+  color: var(--accent) !important;
 }
 .header.is-hero-closed:not(.is-scrolled) .logo span {
-  color: #2CFF05 !important;
+  color: var(--accent) !important;
 }
 .header.is-hero-closed:not(.is-scrolled) .wordmark {
   color: rgba(10, 12, 14, 0.65);
@@ -152,7 +167,7 @@ textarea:focus-visible {
   transition: color 0.2s ease;
 }
 .header.is-hero-closed:not(.is-scrolled) nav a:hover {
-  color: #2CFF05 !important;
+  color: var(--accent) !important;
 }
 .header.is-hero-closed:not(.is-scrolled) .nav-cta {
   border: 1px solid rgba(10, 12, 14, 0.28);
@@ -162,8 +177,8 @@ textarea:focus-visible {
 }
 .header.is-hero-closed:not(.is-scrolled) .nav-cta:hover {
   background: #100E09 !important;
-  color: #2CFF05 !important;
-  border-color: #2CFF05 !important;
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
   box-shadow: 0 4px 18px rgba(44, 255, 5, 0.25);
 }
 .header.is-hero-closed:not(.is-scrolled) .menu-toggle {
@@ -173,102 +188,102 @@ textarea:focus-visible {
 }
 .header.is-hero-closed:not(.is-scrolled) .menu-toggle:hover {
   background: #100E09 !important;
-  color: #2CFF05 !important;
-  border-color: #2CFF05 !important;
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
 }
 
 /* 2. REVEALED HERO & DEFAULT SITE-WIDE: Obsidian text on Bone / Ivory */
 .header.is-hero-opened,
 .header:not(.is-hero-closed) {
-  color: var(--portal-bg);
+  color: var(--header-text);
 }
 .header.is-hero-opened .logo,
 .header:not(.is-hero-closed) .logo {
-  color: #2CFF05 !important;
+  color: var(--accent) !important;
 }
 .header.is-hero-opened .logo span,
 .header:not(.is-hero-closed) .logo span {
-  color: #2CFF05 !important;
+  color: var(--accent) !important;
 }
 .header.is-hero-opened .wordmark,
 .header:not(.is-hero-closed) .wordmark {
-  color: rgba(10, 12, 14, 0.65);
-  border-left: 1px solid rgba(10, 12, 14, 0.2);
+  color: color-mix(in srgb, var(--header-text) 68%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--header-text) 22%, transparent);
 }
 .header.is-hero-opened nav a,
 .header:not(.is-hero-closed) nav a {
-  color: var(--portal-bg);
+  color: var(--header-text);
   font-weight: 500;
   transition: color 0.2s ease, opacity 0.2s ease;
 }
 .header.is-hero-opened nav a:hover,
 .header:not(.is-hero-closed) nav a:hover {
-  color: #2CFF05 !important;
+  color: var(--accent) !important;
   opacity: 1;
 }
 .header.is-hero-opened .nav-cta,
 .header:not(.is-hero-closed) .nav-cta {
-  border: 1px solid rgba(10, 12, 14, 0.28);
-  color: var(--portal-bg);
+  border: 1px solid color-mix(in srgb, var(--header-text) 28%, transparent);
+  color: var(--header-text);
   background: transparent;
   transition: all 0.25s ease;
 }
 .header.is-hero-opened .nav-cta:hover,
 .header:not(.is-hero-closed) .nav-cta:hover {
   background: #100E09 !important;
-  color: #2CFF05 !important;
-  border-color: #2CFF05 !important;
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
   box-shadow: 0 4px 18px rgba(44, 255, 5, 0.25);
 }
 .header.is-hero-opened .menu-toggle,
 .header:not(.is-hero-closed) .menu-toggle {
-  color: var(--portal-bg);
-  border: 1px solid rgba(10, 12, 14, 0.25);
+  color: var(--header-text);
+  border: 1px solid color-mix(in srgb, var(--header-text) 25%, transparent);
   transition: all 0.25s ease;
 }
 .header.is-hero-opened .menu-toggle:hover,
 .header:not(.is-hero-closed) .menu-toggle:hover {
   background: #100E09 !important;
-  color: #2CFF05 !important;
-  border-color: #2CFF05 !important;
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
 }
 
 /* 3. SCROLLED STATE: Frosted Glass Navbar across the entire website */
 .header.is-scrolled {
   padding: 16px 5%;
-  background: rgba(237, 231, 220, 0.88);
+  background: color-mix(in srgb, var(--header-bg) 88%, transparent);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid rgba(10, 12, 14, 0.08);
   box-shadow: 0 4px 20px rgba(10, 12, 14, 0.04);
-  color: var(--portal-bg);
+  color: var(--header-text);
 }
 .header.is-scrolled .logo {
-  color: #2CFF05 !important;
+  color: var(--accent) !important;
 }
 .header.is-scrolled .logo span {
-  color: #2CFF05 !important;
+  color: var(--accent) !important;
 }
 .header.is-scrolled .wordmark {
-  color: rgba(10, 12, 14, 0.65);
-  border-left-color: rgba(10, 12, 14, 0.2);
+  color: color-mix(in srgb, var(--header-text) 68%, transparent);
+  border-left-color: color-mix(in srgb, var(--header-text) 22%, transparent);
 }
 .header.is-scrolled nav a {
-  color: var(--portal-bg);
+  color: var(--header-text);
   transition: color 0.2s ease;
 }
 .header.is-scrolled nav a:hover {
-  color: #2CFF05 !important;
+  color: var(--accent) !important;
 }
 .header.is-scrolled .nav-cta {
-  border-color: rgba(10, 12, 14, 0.28);
-  color: var(--portal-bg);
+  border-color: color-mix(in srgb, var(--header-text) 28%, transparent);
+  color: var(--header-text);
   transition: all 0.25s ease;
 }
 .header.is-scrolled .nav-cta:hover {
   background: #100E09 !important;
-  color: #2CFF05 !important;
-  border-color: #2CFF05 !important;
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
   box-shadow: 0 4px 18px rgba(44, 255, 5, 0.25);
 }
 .header.is-scrolled .menu-toggle {
@@ -278,18 +293,18 @@ textarea:focus-visible {
 }
 .header.is-scrolled .menu-toggle:hover {
   background: #100E09 !important;
-  color: #2CFF05 !important;
-  border-color: #2CFF05 !important;
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
 }
 /* ==========================================================================
    UIC STUDIO — HERO PORTAL WITH CENTER BUSINESS CARD GATEWAY
-   Strict Palette: BG (#0A0C0E), Bone (#EDE7DC), Lime (#2CFF05)
+   Strict Palette: BG (#0A0C0E), Bone (#EDE7DC), Lime (var(--accent))
    ========================================================================== */
 :root {
   --portal-bg: #0A0C0E;
   --portal-bone: #EDE7DC;
   --portal-muted: #8E918F;
-  --portal-lime: #2CFF05;
+  --portal-lime: var(--accent);
   --portal-line: rgba(237, 231, 220, 0.12);
   --portal-line-subtle: rgba(237, 231, 220, 0.07);
 }
@@ -412,8 +427,8 @@ textarea:focus-visible {
   top: -1px;
   width: 65px;
   height: 3px;
-  background: linear-gradient(90deg, transparent 0%, rgba(44, 255, 5, 0.35) 40%, #2CFF05 85%, #FFFFFF 100%);
-  box-shadow: 0 0 10px #2CFF05, 0 0 20px rgba(44, 255, 5, 0.4);
+  background: linear-gradient(90deg, transparent 0%, rgba(44, 255, 5, 0.35) 40%, var(--accent) 85%, #FFFFFF 100%);
+  box-shadow: 0 0 10px var(--accent), 0 0 20px rgba(44, 255, 5, 0.4);
   animation: signalPassH1 9s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
 }
 
@@ -430,8 +445,8 @@ textarea:focus-visible {
   left: -1px;
   width: 3px;
   height: 60px;
-  background: linear-gradient(180deg, transparent 0%, rgba(44, 255, 5, 0.35) 40%, #2CFF05 85%, #FFFFFF 100%);
-  box-shadow: 0 0 10px #2CFF05, 0 0 18px rgba(44, 255, 5, 0.35);
+  background: linear-gradient(180deg, transparent 0%, rgba(44, 255, 5, 0.35) 40%, var(--accent) 85%, #FFFFFF 100%);
+  box-shadow: 0 0 10px var(--accent), 0 0 18px rgba(44, 255, 5, 0.35);
   animation: signalPassV1 11s 1.8s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
 }
 
@@ -744,10 +759,10 @@ textarea:focus-visible {
 .card-hairline-canvas :where(.nf) { fill: none; }
 .card-hairline-canvas :where(.fo) { stroke: none; fill: rgba(245, 244, 235, 0.05); }
 .card-hairline-canvas :where(.sil) { stroke: rgba(245, 244, 235, 0.45); stroke-width: 1.1px; }
-.card-hairline-canvas :where(.hi) { stroke: #2CFF05 !important; stroke-width: 1.6px; filter: drop-shadow(0 0 6px rgba(44, 255, 5, 0.75)); }
+.card-hairline-canvas :where(.hi) { stroke: var(--accent) !important; stroke-width: 1.6px; filter: drop-shadow(0 0 6px rgba(44, 255, 5, 0.75)); }
 .card-hairline-canvas :where(.lo) { stroke: rgba(245, 244, 235, 0.12); }
 .card-hairline-canvas :where(.dash) { stroke-dasharray: 2 4; stroke: rgba(44, 255, 5, 0.45); }
-.card-hairline-canvas :where(.dot) { stroke: none; fill: #2CFF05; filter: drop-shadow(0 0 6px rgba(44, 255, 5, 0.9)); }
+.card-hairline-canvas :where(.dot) { stroke: none; fill: var(--accent); filter: drop-shadow(0 0 6px rgba(44, 255, 5, 0.9)); }
 .card-hairline-canvas :where(.dot.m) { fill: rgba(245, 244, 235, 0.55); }
 .card-hairline-canvas :where(.dot.off) { fill: rgba(245, 244, 235, 0.14); }
 
@@ -787,8 +802,8 @@ textarea:focus-visible {
   font-weight: 800;
   line-height: 1;
   letter-spacing: -2px;
-  color: #2CFF05 !important;
-  -webkit-text-fill-color: #2CFF05;
+  color: var(--accent) !important;
+  -webkit-text-fill-color: var(--accent);
   -webkit-text-stroke: 0.8px #ffffff;
   paint-order: stroke fill;
   text-shadow: none;
@@ -802,13 +817,13 @@ textarea:focus-visible {
   vertical-align: top;
   margin: 2px 0 0 3px;
   display: inline-block;
-  color: #2CFF05 !important;
-  -webkit-text-fill-color: #2CFF05;
+  color: var(--accent) !important;
+  -webkit-text-fill-color: var(--accent);
   -webkit-text-stroke: 0.35px #ffffff;
 }
 
 .card-nfc-mark {
-  color: #2CFF05;
+  color: var(--accent);
   filter: none;
   animation: nfcMarkPulse 2.5s infinite ease-in-out;
 }
@@ -843,8 +858,8 @@ textarea:focus-visible {
   font-weight: 800;
   line-height: 1;
   letter-spacing: -4.5px;
-  color: #2CFF05 !important;
-  -webkit-text-fill-color: #2CFF05;
+  color: var(--accent) !important;
+  -webkit-text-fill-color: var(--accent);
   -webkit-text-stroke: 1.2px #ffffff;
   paint-order: stroke fill;
   text-shadow: none;
@@ -858,8 +873,8 @@ textarea:focus-visible {
   vertical-align: top;
   margin: 7px 0 0 5px;
   display: inline-block;
-  color: #2CFF05 !important;
-  -webkit-text-fill-color: #2CFF05;
+  color: var(--accent) !important;
+  -webkit-text-fill-color: var(--accent);
   -webkit-text-stroke: 0.45px #ffffff;
 }
 
@@ -879,7 +894,7 @@ textarea:focus-visible {
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: #2CFF05;
+  color: var(--accent);
   text-shadow: none;
 }
 
@@ -888,7 +903,7 @@ textarea:focus-visible {
   font-size: 8.5px;
   font-weight: 600;
   letter-spacing: 0.16em;
-  color: #2CFF05;
+  color: var(--accent);
   opacity: 0.8;
   text-shadow: none;
 }
@@ -1069,8 +1084,8 @@ textarea:focus-visible {
 
 .noir-btn-primary:hover {
   background: #100E09;
-  color: #2CFF05 !important;
-  border: 1.5px solid #2CFF05;
+  color: var(--accent) !important;
+  border: 1.5px solid var(--accent);
   transform: translateY(-2px);
   box-shadow: 0 14px 32px rgba(44, 255, 5, 0.3);
 }
@@ -1081,7 +1096,7 @@ textarea:focus-visible {
 }
 
 .noir-btn-primary:hover .btn-arrow {
-  color: #2CFF05 !important;
+  color: var(--accent) !important;
   transform: translate(2px, -2px);
 }
 
@@ -1103,16 +1118,16 @@ textarea:focus-visible {
 }
 
 .noir-btn-secondary:hover {
-  border-color: #2CFF05 !important;
+  border-color: var(--accent) !important;
   background: #100E09 !important;
-  color: #2CFF05 !important;
+  color: var(--accent) !important;
   transform: translateY(-2px);
   box-shadow: 0 10px 24px rgba(44, 255, 5, 0.25);
 }
 
 .noir-btn-secondary:hover .btn-dot {
-  background: #2CFF05 !important;
-  box-shadow: 0 0 8px #2CFF05;
+  background: var(--accent) !important;
+  box-shadow: 0 0 8px var(--accent);
 }
 
 .btn-dot {
@@ -1303,7 +1318,7 @@ h2 {
    ======================================================== */
 .work-catalogue {
   position: relative;
-  background: #e9eae3;
+  background: var(--work-bg);
   padding: 0;
   box-sizing: border-box;
 }
@@ -1401,7 +1416,7 @@ h2 {
 .catalogue-item:focus-visible .catalogue-plate {
   transform: translateY(-8px);
   box-shadow: 0 20px 42px rgba(15, 20, 18, 0.18), 0 0 24px rgba(44, 255, 5, 0.18);
-  border-color: #2CFF05;
+  border-color: var(--accent);
 }
 
 /* Plate Media / Cover Image */
@@ -1526,15 +1541,15 @@ h2 {
 }
 
 .catalogue-item:hover .plate-client {
-  color: #2CFF05 !important;
+  color: var(--accent) !important;
   text-shadow: 0 0 10px rgba(44, 255, 5, 0.45);
 }
 
 .catalogue-item:hover .plate-arrow {
   transform: translate(2px, -2px);
   background: #100E09;
-  color: #2CFF05 !important;
-  border: 1.5px solid #2CFF05;
+  color: var(--accent) !important;
+  border: 1.5px solid var(--accent);
   box-shadow: 0 4px 14px rgba(44, 255, 5, 0.3);
 }
 
@@ -1891,7 +1906,7 @@ h2 {
 }
 
 .project:hover .cover-client-label {
-  color: #2CFF05 !important;
+  color: var(--accent) !important;
   text-shadow: 0 0 10px rgba(44, 255, 5, 0.45);
 }
 
@@ -1931,7 +1946,7 @@ h2 {
 }
 
 .project:hover .cover-bottom-meta strong {
-  color: #2CFF05 !important;
+  color: var(--accent) !important;
   text-shadow: 0 2px 16px rgba(44, 255, 5, 0.5);
 }
 
@@ -2138,7 +2153,7 @@ h2 {
   transition: color 0.2s ease, text-shadow 0.2s ease;
 }
 .text-link:hover {
-  color: #2CFF05 !important;
+  color: var(--accent) !important;
   text-shadow: 0 0 10px rgba(44, 255, 5, 0.35);
 }
 
@@ -2163,8 +2178,8 @@ h2 {
 }
 .pill:hover {
   background: #100E09 !important;
-  color: #2CFF05 !important;
-  border-color: #2CFF05 !important;
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
   box-shadow: 0 10px 26px rgba(44, 255, 5, 0.28);
   transform: translateY(-2px);
 }
@@ -2190,11 +2205,11 @@ summary:hover {
   color: #100E09;
 }
 summary:hover > span {
-  color: #2CFF05 !important;
+  color: var(--accent) !important;
 }
 summary:hover .service-expand-icon {
-  stroke: #2CFF05 !important;
-  color: #2CFF05 !important;
+  stroke: var(--accent) !important;
+  color: var(--accent) !important;
 }
 summary::-webkit-details-marker {
   display: none;
@@ -2214,8 +2229,8 @@ summary > span {
 }
 details[open] .service-expand-icon {
   transform: rotate(180deg);
-  color: #2CFF05;
-  stroke: #2CFF05;
+  color: var(--accent);
+  stroke: var(--accent);
 }
 details > div {
   padding: 0 25px 30px 40px;
@@ -2233,7 +2248,7 @@ details small {
   line-height: 1.8;
 }
 .nfc {
-  background: #e5e9df;
+  background: var(--nfc-bg);
 }
 .nfc-grid {
   display: grid;
@@ -2266,7 +2281,7 @@ details small {
 }
 .nfc li svg {
   flex-shrink: 0;
-  color: #2CFF05;
+  color: var(--accent);
   background: #141c18;
   border-radius: 50%;
   padding: 3px;
@@ -2285,7 +2300,7 @@ details small {
   height: 170px;
   border-radius: 12px;
   background: #141c18;
-  color: #2CFF05;
+  color: var(--accent);
   padding: 22px;
   transform: rotate(-13deg);
   border: 1.5px solid rgba(44, 255, 5, 0.45);
@@ -2300,7 +2315,7 @@ details small {
 .physical-card > span {
   font-size: 20px;
   font-weight: 700;
-  color: #2CFF05;
+  color: var(--accent);
 }
 .physical-card strong {
   display: block;
@@ -2313,7 +2328,7 @@ details small {
   position: absolute;
   right: 20px;
   bottom: 20px;
-  color: #2CFF05;
+  color: var(--accent);
   filter: drop-shadow(0 0 8px rgba(44, 255, 5, 0.7));
 }
 .physical-card small {
@@ -2351,7 +2366,7 @@ details small {
   margin: 0 auto 12px;
   background: rgba(44, 255, 5, 0.2);
   color: #0A0C0E;
-  border: 1.5px solid #2CFF05;
+  border: 1.5px solid var(--accent);
   box-shadow: 0 0 16px rgba(44, 255, 5, 0.3);
   width: 50px;
   height: 50px;
@@ -2385,21 +2400,21 @@ details small {
   transition: all 0.2s ease;
 }
 .phone-button {
-  background: #2CFF05;
+  background: var(--accent);
   color: #0A0C0E;
   font-weight: 700;
   box-shadow: 0 4px 14px rgba(44, 255, 5, 0.35);
 }
 .phone-button:hover {
   background: #100E09;
-  color: #2CFF05;
-  border: 1px solid #2CFF05;
+  color: var(--accent);
+  border: 1px solid var(--accent);
   box-shadow: 0 4px 16px rgba(44, 255, 5, 0.4);
 }
 .phone-link:hover {
   background: #100E09;
-  color: #2CFF05;
-  border: 1px solid #2CFF05;
+  color: var(--accent);
+  border: 1px solid var(--accent);
 }
 .phone-footer {
   display: block;
@@ -2421,8 +2436,8 @@ details small {
 }
 .nfc .pill:hover {
   background: #100E09 !important;
-  color: #2CFF05 !important;
-  border: 1.5px solid #2CFF05 !important;
+  color: var(--accent) !important;
+  border: 1.5px solid var(--accent) !important;
   box-shadow: 0 10px 26px rgba(44, 255, 5, 0.28);
 }
 .tap-label {
@@ -2544,7 +2559,7 @@ details small {
   left: 50%;
   width: 45px;
   height: 2px;
-  background: linear-gradient(90deg, #202323, #2CFF05);
+  background: linear-gradient(90deg, #202323, var(--accent));
   transform-origin: left center;
   box-shadow: 0 0 10px rgba(44, 255, 5, 0.7);
 }
@@ -2566,7 +2581,7 @@ details small {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #2CFF05;
+  background: var(--accent);
 }
 .p3d-satellite {
   position: absolute;
@@ -2626,10 +2641,10 @@ details small {
 }
 .p3d-face-front  { transform: translateZ(27px); background: rgba(255, 255, 255, 0.8); }
 .p3d-face-back   { transform: rotateY(180deg) translateZ(27px); background: rgba(230, 235, 225, 0.5); }
-.p3d-face-top    { transform: rotateX(90deg) translateZ(27px); background: #2CFF05; border-color: rgba(32, 35, 35, 0.4); }
+.p3d-face-top    { transform: rotateX(90deg) translateZ(27px); background: var(--accent); border-color: rgba(32, 35, 35, 0.4); }
 .p3d-face-bottom { transform: rotateX(-90deg) translateZ(27px); background: rgba(32, 35, 35, 0.12); }
 .p3d-face-left   { transform: rotateY(-90deg) translateZ(27px); background: rgba(240, 244, 236, 0.7); }
-.p3d-face-right  { transform: rotateY(90deg) translateZ(27px); background: #202323; color: #2CFF05; }
+.p3d-face-right  { transform: rotateY(90deg) translateZ(27px); background: #202323; color: var(--accent); }
 .p3d-cube-shadow {
   position: absolute;
   bottom: -18px;
@@ -2694,7 +2709,7 @@ details small {
 .p3d-wire-bar:nth-child(3) { width: 50%; background: #879955; margin-bottom: 0; }
 .p3d-layer-3 {
   background: #202323;
-  color: #2CFF05;
+  color: var(--accent);
   border-color: #202323;
   transform: translateZ(36px);
   box-shadow: 0 14px 26px rgba(32, 35, 35, 0.2);
@@ -2753,7 +2768,7 @@ details small {
   height: 24px;
   border-radius: 50%;
   background: #202323;
-  color: #2CFF05;
+  color: var(--accent);
   display: grid;
   place-items: center;
   font-size: 9.5px;
@@ -2782,11 +2797,11 @@ details small {
 .contact {
   position: relative;
   overflow: hidden;
-  background-color: #2CFF05;
+  background-color: var(--contact-bg);
   background-image:
     radial-gradient(ellipse 75% 65% at 8% 15%, rgba(237, 231, 220, 0.45) 0%, transparent 60%),
     radial-gradient(ellipse 80% 70% at 85% 85%, rgba(237, 231, 220, 0.3) 0%, transparent 60%),
-    linear-gradient(135deg, #2CFF05 0%, #25e504 60%, #1ecc03 100%);
+    linear-gradient(135deg, var(--accent) 0%, #25e504 60%, #1ecc03 100%);
   color: #17201c;
 }
 .contact-testimonials-viewport {
@@ -2842,11 +2857,11 @@ details small {
   stroke: currentColor;
 }
 .contact h2:hover .big-arrow {
-  color: #2CFF05 !important;
+  color: var(--accent) !important;
   transform: translate(8px, -8px);
 }
 .contact h2:hover .contact-greeting-rotator {
-  color: #2CFF05 !important;
+  color: var(--accent) !important;
   text-shadow: 0 4px 20px rgba(44, 255, 5, 0.45);
 }
 .contact-greeting-wrapper {
@@ -2939,8 +2954,8 @@ details small {
 }
 .contact .pill:hover {
   background: #100E09 !important;
-  color: #2CFF05 !important;
-  border: 1.5px solid #2CFF05 !important;
+  color: var(--accent) !important;
+  border: 1.5px solid var(--accent) !important;
   transform: translateY(-2px);
   box-shadow: 0 14px 32px rgba(44, 255, 5, 0.32);
 }
@@ -2959,14 +2974,14 @@ footer {
   display: flex;
   align-items: center;
   gap: 35px;
-  background: #17201c;
-  color: #dce5dc;
+  background: var(--footer-bg);
+  color: var(--footer-text);
 }
 footer a {
   transition: color 0.2s ease;
 }
 footer a:hover {
-  color: #2CFF05 !important;
+  color: var(--accent) !important;
 }
 footer p {
   font-size: 10px;
@@ -2984,7 +2999,7 @@ footer > a:last-child {
   transition: color 0.2s ease;
 }
 footer > a:last-child:hover {
-  color: #2CFF05 !important;
+  color: var(--accent) !important;
 }
 dialog {
   max-width: 660px;
@@ -3134,8 +3149,8 @@ dialog p {
 }
 .pill-subtle:hover {
   background: #100E09 !important;
-  color: #2CFF05 !important;
-  border-color: #2CFF05 !important;
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
   box-shadow: 0 6px 18px rgba(44, 255, 5, 0.25);
 }
 .dialog-close {
@@ -3149,7 +3164,7 @@ dialog p {
   transition: color 0.2s ease, transform 0.2s ease;
 }
 .dialog-close:hover {
-  color: #2CFF05 !important;
+  color: var(--accent) !important;
   transform: scale(1.1);
 }
 .project-tags {
@@ -3284,7 +3299,7 @@ dialog p {
     transition: color 0.2s ease;
   }
   .header nav a:hover {
-    color: #2CFF05 !important;
+    color: var(--accent) !important;
   }
   .header nav .nav-cta {
     border-color: rgba(237, 231, 220, 0.25);
@@ -3295,8 +3310,8 @@ dialog p {
   }
   .header nav .nav-cta:hover {
     background: #100E09 !important;
-    color: #2CFF05 !important;
-    border-color: #2CFF05 !important;
+    color: var(--accent) !important;
+    border-color: var(--accent) !important;
   }
   .header nav.open {
     display: flex;

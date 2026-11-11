@@ -1,6 +1,6 @@
 .studio {
-  background: #f4f3ee;
-  color: #242c27;
+  background: var(--nfc-page-bg, #f4f3ee);
+  color: var(--nfc-page-ink, #242c27);
   min-height: 100vh;
 }
 .header {
@@ -11,23 +11,31 @@
   border-bottom: 1px solid #dcded4;
 }
 .logo {
+  display: inline-flex;
+  align-items: baseline;
   font-size: 46px;
   font-weight: 800;
   letter-spacing: -4px;
   line-height: 1;
-  color: #2CFF05 !important;
-  -webkit-text-fill-color: #2CFF05;
+  color: var(--accent) !important;
+  -webkit-text-fill-color: var(--accent);
   -webkit-text-stroke: 1px #ffffff;
   paint-order: stroke fill;
   text-decoration: none;
+}
+.logoImg {
+  display: block;
+  max-height: 44px;
+  width: auto;
+  object-fit: contain;
 }
 .logo span {
   font-size: 11px;
   vertical-align: top;
   letter-spacing: 0;
   margin-left: 5px;
-  color: #2CFF05 !important;
-  -webkit-text-fill-color: #2CFF05;
+  color: var(--accent) !important;
+  -webkit-text-fill-color: var(--accent);
   -webkit-text-stroke: 0.4px #ffffff;
 }
 .productName,
@@ -43,8 +51,8 @@
   transition: all 0.2s ease;
 }
 .back:hover {
-  color: #2CFF05 !important;
-  border-color: #2CFF05 !important;
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
 }
 .intro {
   text-align: center;
@@ -100,7 +108,11 @@
   position: relative;
   border: 1px solid #dce0d4;
   border-radius: 20px 0 0 20px;
-  background: radial-gradient(ellipse at 50% 45%, #f8faee, #e3e8da 75%);
+  background: radial-gradient(
+    ellipse at 50% 45%,
+    color-mix(in srgb, var(--nfc-preview-bg, #e3e8da) 42%, #ffffff),
+    var(--nfc-preview-bg, #e3e8da) 78%
+  );
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -151,7 +163,7 @@
   border: 0;
   padding: 0;
   background: none;
-  border-radius: 16px;
+  border-radius: var(--card-radius, 16px);
   transform-style: preserve-3d;
   transform: rotateY(-12deg) rotateX(9deg) rotateZ(-7deg);
   transition: transform 0.9s cubic-bezier(0.2, 0.75, 0.2, 1);
@@ -174,13 +186,14 @@
   display: flex;
   flex-direction: column;
   padding: 25px;
-  border-radius: 16px;
+  border-radius: var(--card-radius, 16px);
   overflow: hidden;
   background: var(--card-color);
   backface-visibility: hidden;
   transition:
     background 0.5s,
-    color 0.5s;
+    color 0.5s,
+    border-radius 0.35s ease;
   border: 1px solid #ffffff30;
 }
 .face:after {
@@ -340,6 +353,40 @@
 .minimal .identity {
   margin-top: auto;
 }
+.framed {
+  box-shadow: inset 0 0 0 10px transparent, inset 0 0 0 11px color-mix(in srgb, currentColor 32%, transparent);
+}
+.framed .identity {
+  border-top: 1px solid color-mix(in srgb, currentColor 24%, transparent);
+  padding-top: 16px;
+}
+.split .cardBrand {
+  padding-bottom: 14px;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+}
+.split .identity {
+  padding: 18px 0 20px;
+}
+.grid::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, currentColor 9%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, currentColor 9%, transparent) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+}
+.fontSerif .identity strong,
+.fontSerif .cardBrand {
+  font-family: Georgia, 'Times New Roman', serif;
+}
+.fontMono .identity strong,
+.fontMono .identity small,
+.fontMono .cardBrand,
+.fontMono .cardFooter {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
 .reverse {
   transform: rotateY(180deg);
 }
@@ -369,8 +416,8 @@
 }
 .flipButton:hover {
   background: #100E09;
-  color: #2CFF05;
-  border-color: #2CFF05;
+  color: var(--accent);
+  border-color: var(--accent);
 }
 .previewNote {
   text-align: center;
@@ -380,7 +427,7 @@
 }
 .controls {
   padding: 32px 36px;
-  background: #fffefa;
+  background: var(--nfc-panel-bg, #fffefa);
   border: 1px solid #dce0d4;
   border-left: 0;
   border-radius: 0 20px 20px 0;
@@ -414,6 +461,7 @@
 }
 .swatches {
   display: flex;
+  flex-wrap: wrap;
   gap: 14px;
   clear: both;
 }
@@ -434,6 +482,7 @@
 }
 .layouts {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   clear: both;
 }
@@ -455,9 +504,10 @@
   border-color: #aa4638;
 }
 .layouts button {
-  flex: 1;
+  flex: 1 1 calc(33.333% - 6px);
+  min-width: 96px;
   font-size: 11px;
-  padding: 11px 6px;
+  padding: 11px 8px;
   border: 1px solid #dce0d4;
   border-radius: 7px;
   background: transparent;
@@ -465,9 +515,15 @@
   transition: all 0.2s ease;
   cursor: pointer;
 }
+.styleDescription {
+  margin-top: 10px;
+  font-size: 11px;
+  color: #697166;
+  line-height: 1.5;
+}
 .layouts button:hover {
-  border-color: #2CFF05;
-  color: #2CFF05;
+  border-color: var(--accent);
+  color: var(--accent);
 }
 .layouts button[aria-pressed='true'] {
   background: #26352a;
@@ -502,9 +558,9 @@
   justify-content: space-between;
   gap: 35px;
   width: 100%;
-  border: 1.5px solid #2CFF05;
+  border: 1.5px solid var(--accent);
   border-radius: 30px;
-  background: #2CFF05;
+  background: var(--accent);
   color: #0A0C0E;
   padding: 16px 22px;
   font-size: 12px;
@@ -520,8 +576,8 @@
 .demoButton:hover {
   transform: translateY(-2px);
   background: #100E09 !important;
-  color: #2CFF05 !important;
-  border-color: #2CFF05 !important;
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
   box-shadow: 0 8px 24px rgba(44, 255, 5, 0.28);
 }
 .note {
@@ -560,7 +616,7 @@
   margin: 25px 0;
 }
 .experience h2 em {
-  color: #2CFF05;
+  color: var(--accent);
 }
 .experienceCopy > p:not(.eyebrow) {
   font-size: 13px;
@@ -807,8 +863,8 @@
 }
 .closing .demoButton:hover {
   background: #100E09 !important;
-  color: #2CFF05 !important;
-  border-color: #2CFF05 !important;
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
   box-shadow: 0 8px 24px rgba(44, 255, 5, 0.28);
 }
 .footer {
@@ -830,7 +886,7 @@
   transition: color 0.2s ease;
 }
 .footer > a:last-child:hover {
-  color: #2CFF05 !important;
+  color: var(--accent) !important;
 }
 .studio button:focus-visible,
 .studio a:focus-visible,

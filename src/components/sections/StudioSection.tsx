@@ -1,31 +1,24 @@
 import { ArrowUpRight } from 'lucide-react';
+import { DEFAULT_SITE_SETTINGS, type SiteSettings } from '@/lib/cms-types';
 
-export function StudioSection() {
+export function StudioSection({
+  settings = DEFAULT_SITE_SETTINGS,
+}: {
+  settings?: SiteSettings;
+}) {
   return (
     <section className="intro section" id="intro">
       <div className="section-kicker">
-        <span>STRATEGY MEETS SOUL.</span>
+        <span>{settings.studio_kicker}</span>
       </div>
       <div className="intro-grid">
         <h2>
-          Good businesses
-          <br />
-          deserve{' '}
-          <em>
-            an identity
-            <br />
-            of their own.
-          </em>
+          {settings.studio_headline_prefix}{' '}
+          <em>{settings.studio_headline_em}</em>
         </h2>
         <div className="intro-text">
-          <p>
-            Not another logo. Not another website. A considered presence that connects who you are
-            with where you want to go.
-          </p>
-          <p>
-            We’re UIC. A creative and technology studio bringing brands, digital experiences and
-            business systems together — with intention, craft and a little audacity.
-          </p>
+          <p>{settings.studio_p1}</p>
+          <p>{settings.studio_p2}</p>
           <a className="text-link" href="#services" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
             <span>Meet your unfair advantage</span>
             <ArrowUpRight size={15} strokeWidth={2.2} aria-hidden="true" />

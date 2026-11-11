@@ -4,6 +4,12 @@ import { useState, useEffect } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { ContactForm } from '@/components/forms/ContactForm';
 import { TestimonialMarquee } from '@/components/testimonials/TestimonialMarquee';
+import {
+  DEFAULT_SITE_SETTINGS,
+  DEFAULT_TESTIMONIALS,
+  type CmsTestimonial,
+  type SiteSettings,
+} from '@/lib/cms-types';
 
 const GREETINGS = [
   { id: 'en', word: 'hi.' },
@@ -14,7 +20,13 @@ const GREETINGS = [
   { id: 'te', word: 'నమస్కారం.' },
 ];
 
-export function ContactSection() {
+export function ContactSection({
+  settings = DEFAULT_SITE_SETTINGS,
+  testimonials = DEFAULT_TESTIMONIALS,
+}: {
+  settings?: SiteSettings;
+  testimonials?: CmsTestimonial[];
+}) {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -29,14 +41,14 @@ export function ContactSection() {
   return (
     <section className="contact section" id="contact">
       <div className="section-kicker" style={{ marginBottom: '24px' }}>
-        <span>PROVEN IN PRODUCTION · CLIENT FEEDBACK</span>
+        <span>{settings.testimonials_kicker}</span>
       </div>
       <div className="contact-testimonials-viewport">
-        <TestimonialMarquee />
+        <TestimonialMarquee items={testimonials} />
       </div>
 
       <div className="section-kicker" style={{ marginTop: 'clamp(36px, 5vh, 60px)' }}>
-        <span>START WITH A CONVERSATION.</span>
+        <span>{settings.contact_kicker}</span>
       </div>
       <div className="contact-grid">
         <div className="contact-headline-col">

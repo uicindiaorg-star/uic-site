@@ -1,13 +1,29 @@
-export function ProcessSection() {
+import { Fragment } from 'react';
+import { DEFAULT_SITE_SETTINGS, type SiteSettings } from '@/lib/cms-types';
+
+function renderLines(text: string) {
+  const lines = text.split('\n');
+  return lines.map((line, idx) => (
+    <Fragment key={`${line}-${idx}`}>
+      {line}
+      {idx < lines.length - 1 ? <br /> : null}
+    </Fragment>
+  ));
+}
+
+export function ProcessSection({
+  settings = DEFAULT_SITE_SETTINGS,
+}: {
+  settings?: SiteSettings;
+}) {
   return (
     <section className="process section" id="process">
       <div className="section-kicker">
-        <span>COLLABORATIVE BY DESIGN.</span>
+        <span>{settings.process_kicker}</span>
       </div>
       <h2>
-        From the first conversation
-        <br />
-        to <em>what comes next.</em>
+        {renderLines(settings.process_headline_prefix)}{' '}
+        <em>{settings.process_headline_em}</em>
       </h2>
       <div className="process-grid">
         <article>

@@ -1,8 +1,23 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
+import { DEFAULT_SITE_SETTINGS, type SiteSettings } from '@/lib/cms-types';
 
-export function SiteHeader() {
+function renderLines(text: string) {
+  const lines = text.split('\n');
+  return lines.map((line, idx) => (
+    <Fragment key={`${line}-${idx}`}>
+      {line}
+      {idx < lines.length - 1 ? <br /> : null}
+    </Fragment>
+  ));
+}
+
+export function SiteHeader({
+  settings = DEFAULT_SITE_SETTINGS,
+}: {
+  settings?: SiteSettings;
+}) {
   const [open, setOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHeroClosed, setIsHeroClosed] = useState(true);
@@ -28,18 +43,13 @@ export function SiteHeader() {
       setIsHeroClosed(false);
     };
 
-    // Check initial state
-    if (typeof window !== 'undefined') {
+    const rafId = window.requestAnimationFrame(() => {
       const isOpened = document.documentElement.getAttribute('data-hero-opened') === 'true';
-      if (isOpened) {
-        setIsHeroClosed(false);
-      } else {
-        setIsHeroClosed(true);
-      }
+      setIsHeroClosed(!isOpened);
       if (window.scrollY > 20 && isOpened) {
         setIsScrolled(true);
       }
-    }
+    });
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('uic:hero-open', handleHeroOpen);
@@ -59,6 +69,7 @@ export function SiteHeader() {
     });
 
     return () => {
+      window.cancelAnimationFrame(rafId);
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('uic:hero-open', handleHeroOpen);
       observer.disconnect();
@@ -80,13 +91,19 @@ export function SiteHeader() {
       }`}
     >
       <a className="logo" href="#top" aria-label="UIC home" onClick={handleNavClick}>
-        uic<span>®</span>
+        {settings.logo_image_url ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={settings.logo_image_url} alt={settings.logo_text || 'Brand logo'} className="logo-img" />
+        ) : (
+          <>
+            {settings.logo_text || 'uic'}
+            {settings.logo_mark ? <span>{settings.logo_mark}</span> : null}
+          </>
+        )}
       </a>
-      <span className="wordmark">
-        UNIQUE IDENTITY
-        <br />
-        CRAFT
-      </span>
+      {settings.brand_wordmark ? (
+        <span className="wordmark">{renderLines(settings.brand_wordmark)}</span>
+      ) : null}
       <button
         className="menu-toggle"
         aria-expanded={open}
@@ -123,26 +140,44 @@ export function SiteHeader() {
         className={open ? 'open' : ''}
         aria-label="Main navigation"
       >
-        <a href="#work" onClick={handleNavClick}>Work</a>
-        <a href="#services" onClick={handleNavClick}>Expertise</a>
-        <a href="#nfc" onClick={handleNavClick}>Beyond digital</a>
-        <a className="nav-cta" href="#contact" onClick={handleNavClick}>
-          Let’s talk{' '}
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
+        {settings.nav_link_1_label ? (
+          <a href={settings.nav_link_1_href || '#work'} onClick={handleNavClick}>
+            {settings.nav_link_1_label}
+          </a>
+        ) : null}
+        {settings.nav_link_2_label ? (
+          <a href={settings.nav_link_2_href || '#services'} onClick={handleNavClick}>
+            {settings.nav_link_2_label}
+          </a>
+        ) : null}
+        {settings.nav_link_3_label ? (
+          <a href={settings.nav_link_3_href || '#nfc'} onClick={handleNavClick}>
+            {settings.nav_link_3_label}
+          </a>
+        ) : null}
+        {settings.nav_cta_label ? (
+          <a
+            className="nav-cta"
+            href={settings.nav_cta_href || '#contact'}
+            onClick={handleNavClick}
           >
-            <line x1="6" y1="18" x2="18" y2="6" />
-            <polyline points="9 6 18 6 18 15" />
-          </svg>
-        </a>
+            {settings.nav_cta_label}{' '}
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <line x1="6" y1="18" x2="18" y2="6" />
+              <polyline points="9 6 18 6 18 15" />
+            </svg>
+          </a>
+        ) : null}
       </nav>
     </header>
   );

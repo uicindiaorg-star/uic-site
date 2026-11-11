@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, useState, useRef, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { ArrowUpRight, Check } from 'lucide-react';
-import { downloadProjectBrief } from '@/lib/project-brief';
 import { FormInput } from './FormInput';
 import { FormTextarea } from './FormTextarea';
 import { ServiceSelector } from './ServiceSelector';
@@ -24,8 +23,8 @@ interface SubmittedBrief {
 }
 
 export function ContactForm() {
-  const formRef = useRef<HTMLFormElement>(null);
   const [submittedBrief, setSubmittedBrief] = useState<SubmittedBrief | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [service, setService] = useState('Brand & identity');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -35,38 +34,59 @@ export function ContactForm() {
     return () => window.removeEventListener('uic:interest', readInterest);
   }, []);
 
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const form = event.currentTarget;
     setIsSubmitting(true);
+    setSubmitError(null);
+    setSubmittedBrief(null);
 
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData(form);
     const name = String(formData.get('name') ?? '').trim();
     const email = String(formData.get('email') ?? '').trim();
-    const selectedService = String(formData.get('service') ?? service);
+    const selectedService = String(formData.get('service') ?? service).trim();
+    const message = String(formData.get('message') ?? '').trim();
 
-    downloadProjectBrief(formData);
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          email,
+          service: selectedService,
+          message,
+        }),
+      });
 
-    setTimeout(() => {
-      setIsSubmitting(false);
+      const result = (await response.json().catch(() => ({}))) as {
+        error?: string;
+      };
+
+      if (!response.ok) {
+        setSubmitError(
+          result.error ?? 'Could not send your inquiry right now. Please try again.'
+        );
+        return;
+      }
+
       setSubmittedBrief({
         name,
         email,
         service: selectedService,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       });
-    }, 200);
-  }
-
-  function handleDownloadAgain() {
-    if (formRef.current) {
-      const formData = new FormData(formRef.current);
-      downloadProjectBrief(formData);
+      form.reset();
+      setService('Brand & identity');
+    } catch {
+      setSubmitError('Network error while sending your inquiry. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
   return (
     <form
-      ref={formRef}
       id="contact-form"
       className={styles.formCard}
       onSubmit={submit}
@@ -118,11 +138,18 @@ export function ContactForm() {
       />
 
       <button className={styles.submitButton} type="submit" disabled={isSubmitting}>
-        <span>{isSubmitting ? 'Preparing brief…' : 'Prepare project brief'}</span>
+        <span>{isSubmitting ? 'Sending inquiry…' : 'Send inquiry'}</span>
         <span className={styles.buttonArrow} aria-hidden="true">
           <ArrowUpRight size={17} strokeWidth={2.4} />
         </span>
       </button>
+
+      {submitError ? (
+        <div className={styles.errorBanner} role="alert">
+          <div className={styles.errorHeader}>Could not send inquiry</div>
+          <div className={styles.errorDetails}>{submitError}</div>
+        </div>
+      ) : null}
 
       {submittedBrief ? (
         <div className={styles.successBanner} role="status">
@@ -130,24 +157,17 @@ export function ContactForm() {
             <span className={styles.successIcon}>
               <Check size={12} strokeWidth={3} />
             </span>
-            <span>Project brief generated & downloaded!</span>
+            <span>Inquiry received at {submittedBrief.time}</span>
           </div>
           <div className={styles.successDetails}>
-            Ready to review for <strong>{submittedBrief.name}</strong> ({submittedBrief.email}) with focus on{' '}
-            <em>{submittedBrief.service}</em>.
+            Thank you, <strong>{submittedBrief.name}</strong>. We received your note for{' '}
+            <em>{submittedBrief.service}</em> and will reply to {submittedBrief.email}.
           </div>
-          <button
-            type="button"
-            className={styles.downloadAgain}
-            onClick={handleDownloadAgain}
-          >
-            Download again <ArrowUpRight size={13} strokeWidth={2.2} style={{ display: 'inline', verticalAlign: 'middle', marginLeft: '4px' }} />
-          </button>
         </div>
       ) : null}
 
       <p className={styles.note}>
-        Generates an offline project brief text file. No tracking or external servers. Share it with UIC whenever you’re ready to start.
+        Your inquiry is sent directly to UIC.
       </p>
     </form>
   );

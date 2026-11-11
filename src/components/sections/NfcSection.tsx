@@ -1,7 +1,12 @@
 import { ArrowUpRight } from 'lucide-react';
 import { NfcContactLink } from '@/components/forms/NfcContactLink';
+import { DEFAULT_SITE_SETTINGS, type SiteSettings } from '@/lib/cms-types';
 
-export function NfcSection() {
+export function NfcSection({
+  settings = DEFAULT_SITE_SETTINGS,
+}: {
+  settings?: SiteSettings;
+}) {
   return (
     <section className="nfc section" id="nfc">
       <div className="section-kicker">
@@ -59,16 +64,11 @@ export function NfcSection() {
           </span>
         </div>
         <div>
-          <span className="eyebrow">UIC CONNECT</span>
+          <span className="eyebrow">{settings.nfc_eyebrow}</span>
           <h2>
-            Your next connection
-            <br />
-            is <em>one tap away.</em>
+            {settings.nfc_headline_prefix} <em>{settings.nfc_headline_em}</em>
           </h2>
-          <p>
-            A beautifully crafted NFC card. A personal digital profile. A seamless way to share your
-            world — without an app.
-          </p>
+          <p>{settings.nfc_copy}</p>
           <ul className="nfc-feature-list">
             <li>
               <ArrowUpRight size={13} strokeWidth={2.4} aria-hidden="true" />

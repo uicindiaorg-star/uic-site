@@ -27,7 +27,7 @@
   font-size: 18px;
   font-weight: 800;
   letter-spacing: -1px;
-  color: #2CFF05;
+  color: var(--accent);
   display: flex;
   align-items: baseline;
   gap: 2px;
@@ -50,7 +50,7 @@
   font-size: 14px;
   font-weight: 800;
   letter-spacing: -2px;
-  color: #2CFF05;
+  color: var(--accent);
 }
 
 /* Two-column layout */
@@ -136,7 +136,7 @@
 .input:focus,
 .textarea:focus {
   background: rgba(255, 255, 255, 0.09) !important;
-  border-color: #2CFF05 !important;
+  border-color: var(--accent) !important;
   box-shadow: 0 0 0 3px rgba(44, 255, 5, 0.18) !important;
 }
 
@@ -147,7 +147,7 @@
   -webkit-box-shadow: 0 0 0 1000px #212a23 inset !important;
   -webkit-text-fill-color: #f2f5ec !important;
   caret-color: #f2f5ec !important;
-  border-color: #2CFF05 !important;
+  border-color: var(--accent) !important;
 }
 
 .textarea {
@@ -186,28 +186,28 @@
 
 .chip:hover {
   background: rgba(44, 255, 5, 0.12);
-  border-color: #2CFF05;
-  color: #2CFF05;
+  border-color: var(--accent);
+  color: var(--accent);
   transform: translateY(-1px);
 }
 
 .chipActive {
-  background: #2CFF05;
+  background: var(--accent);
   color: #0A0C0E;
-  border-color: #2CFF05;
+  border-color: var(--accent);
   font-weight: 700;
   box-shadow: 0 4px 14px rgba(44, 255, 5, 0.25);
 }
 
 .chipActive:hover {
   background: #100E09;
-  border-color: #2CFF05;
-  color: #2CFF05;
+  border-color: var(--accent);
+  color: var(--accent);
   box-shadow: 0 4px 14px rgba(44, 255, 5, 0.3);
 }
 
 .chipActive:hover .chipDot {
-  background: #2CFF05;
+  background: var(--accent);
 }
 
 .chipDot {
@@ -230,9 +230,9 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  background: #2CFF05;
+  background: var(--accent);
   color: #0A0C0E;
-  border: 1.5px solid #2CFF05;
+  border: 1.5px solid var(--accent);
   border-radius: 30px;
   padding: 16px 24px;
   font-size: 13.5px;
@@ -246,14 +246,14 @@
 
 .submitButton:hover {
   background: #100E09;
-  color: #2CFF05;
-  border-color: #2CFF05;
+  color: var(--accent);
+  border-color: var(--accent);
   transform: translateY(-2px);
   box-shadow: 0 12px 28px rgba(44, 255, 5, 0.4);
 }
 
 .submitButton:hover .buttonArrow {
-  color: #2CFF05;
+  color: var(--accent);
 }
 
 .submitButton:active {
@@ -281,7 +281,7 @@
 /* Success Card */
 .successBanner {
   background: rgba(44, 255, 5, 0.12);
-  border: 1.5px solid #2CFF05;
+  border: 1.5px solid var(--accent);
   border-radius: 12px;
   padding: 16px;
   margin-top: 15px;
@@ -297,7 +297,7 @@
   gap: 8px;
   font-size: 13px;
   font-weight: 700;
-  color: #2CFF05;
+  color: var(--accent);
 }
 
 .successIcon {
@@ -306,7 +306,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #2CFF05;
+  background: var(--accent);
   color: #0A0C0E;
   font-size: 11px;
   font-weight: 800;
@@ -326,7 +326,7 @@
   padding: 5px 12px;
   font-size: 11px;
   font-weight: 600;
-  color: #2CFF05;
+  color: var(--accent);
   cursor: pointer;
   transition: background 0.2s;
   font-family: inherit;
@@ -334,8 +334,33 @@
 
 .downloadAgain:hover {
   background: #100E09;
-  color: #2CFF05;
-  border-color: #2CFF05;
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Error Banner */
+.errorBanner {
+  background: rgba(255, 86, 64, 0.1);
+  border: 1.5px solid rgba(255, 108, 88, 0.65);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: fadeIn 0.3s ease;
+}
+
+.errorHeader {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ff8e7e;
+}
+
+.errorDetails {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: #f2d8d4;
 }
 
 @keyframes fadeIn {

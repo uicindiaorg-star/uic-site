@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { projects, Project } from '@/data/projects';
+import { projects as defaultProjects, Project } from '@/data/projects';
+import { DEFAULT_SITE_SETTINGS, type SiteSettings } from '@/lib/cms-types';
 
 // SVG Icons for clean, crisp vector rendering
 function ArrowUpRightIcon({ className = '' }: { className?: string }) {
@@ -65,11 +66,18 @@ function CloseIcon({ className = '' }: { className?: string }) {
   );
 }
 
-export function PortfolioSection() {
+export function PortfolioSection({
+  items = defaultProjects,
+  settings = DEFAULT_SITE_SETTINGS,
+}: {
+  items?: Project[];
+  settings?: SiteSettings;
+}) {
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const [selected, setSelected] = useState<Project>(projects[0]);
+  const projectList = items.length > 0 ? items : defaultProjects;
+  const [selected, setSelected] = useState<Project>(projectList[0]);
 
   function openProject(project: Project) {
     setSelected(project);
@@ -157,12 +165,13 @@ export function PortfolioSection() {
             <div className="catalogue-title-row">
               <div className="catalogue-title-left">
                 <h2>
-                  Proof of <em>possibility.</em>
+                  {settings.portfolio_headline_prefix}{' '}
+                  <em>{settings.portfolio_headline_em}</em>
                 </h2>
                 <p>
-                  Real client systems and studio directions.
+                  {settings.portfolio_sub_1}
                   <br />
-                  Every project begins with a distinct point of view.
+                  {settings.portfolio_sub_2}
                 </p>
               </div>
             </div>
@@ -176,7 +185,7 @@ export function PortfolioSection() {
               role="region"
               aria-label="Horizontal catalogue items rail"
             >
-              {projects.map((project, idx) => (
+              {projectList.map((project, idx) => (
                 <article
                   key={project.id}
                   className={`catalogue-item catalogue-item-${project.id}`}
