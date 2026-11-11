@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Fragment, useEffect, useRef, useState, type CSSProperties } from 'react';
 import { ArrowUpRight, RotateCw, Check } from 'lucide-react';
 import {
@@ -11,6 +12,7 @@ import {
   type NfcFinishPreset,
   type SiteSettings,
 } from '@/lib/cms-types';
+import { saveNfcInquiryDraft } from '@/lib/nfc-inquiry';
 import styles from './CardStudio.module.css';
 
 function renderLines(text: string) {
@@ -39,6 +41,7 @@ export function CardStudio({
   settings?: SiteSettings;
   cardStyles?: CmsNfcStyle[];
 }) {
+  const router = useRouter();
   const finishes: NfcFinishPreset[] =
     Array.isArray(settings.nfc_finishes_json) && settings.nfc_finishes_json.length > 0
       ? settings.nfc_finishes_json
@@ -141,6 +144,26 @@ export function CardStudio({
   function updateCustomColor(value: string) {
     setHexInput(value);
     if (/^#[0-9a-f]{6}$/i.test(value)) setFinish(customFinish(value.toLowerCase()));
+  }
+
+  function handleInquireWithDesign(intent: 'design' | 'physical_order') {
+    saveNfcInquiryDraft({
+      intent,
+      cardName: displayName,
+      isCustomName: name.trim().length > 0 && name.trim() !== 'John Honai',
+      role: role.trim(),
+      brand: displayBrand,
+      styleName: activeStyle.name,
+      layoutVariant: activeStyle.layout_variant,
+      fontVariant: activeStyle.font_variant,
+      finishName: finish.name,
+      cardColor: finish.background,
+      textColor,
+      cornerRadius: activeStyle.corner_radius ?? 16,
+      artworkName:
+        artwork?.name || (activeStyle.artwork_url ? 'Custom style artwork' : 'None'),
+    });
+    router.push('/?nfc=1#contact');
   }
 
   async function downloadDesign() {
@@ -529,13 +552,28 @@ export function CardStudio({
                 />
               </label>
             </fieldset>
-            <button className={styles.save} onClick={downloadDesign} disabled={saving}>
-              {saving ? 'Saving image…' : 'Save my design'} <span>↓</span>
+            <button
+              type="button"
+              className={styles.save}
+              onClick={() => handleInquireWithDesign('design')}
+            >
+              <span>Inquire with this NFC design</span>
+              <ArrowUpRight size={15} strokeWidth={2.3} />
             </button>
-            <p className={styles.note}>
-              Downloads the visible side as a PNG at 4× resolution, including your artwork. Flip to
-              save the other side. Your design resets when you reload.
-            </p>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, marginTop: 10 }}>
+              <p className={styles.note} style={{ margin: 0 }}>
+                Sends your color, style, and card details straight to our contact form.
+              </p>
+              <button
+                type="button"
+                className={styles.flipButton}
+                onClick={downloadDesign}
+                disabled={saving}
+                style={{ fontSize: '10px', padding: '6px 12px', whiteSpace: 'nowrap' }}
+              >
+                {saving ? 'Saving…' : 'Download PNG'}
+              </button>
+            </div>
             <p className={styles.status} role="status">
               {status}
             </p>
@@ -663,18 +701,19 @@ export function CardStudio({
             Ready to make it <em>real?</em>
           </h2>
           <p>
-            Save your card image, then tell us what you have in mind.
+            Order your physical NFC card with your customized style and details.
             <br />
             We’ll help with artwork, card options, and your digital profile.
           </p>
-          <Link
-            href="/#contact"
+          <button
+            type="button"
+            onClick={() => handleInquireWithDesign('physical_order')}
             className={styles.demoButton}
             style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
           >
-            <span>Let’s create your card</span>
+            <span>Order your physical card</span>
             <ArrowUpRight size={14} strokeWidth={2.2} />
-          </Link>
+          </button>
         </section>
       </main>
       <footer className={styles.footer}>

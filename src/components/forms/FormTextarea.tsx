@@ -20,14 +20,13 @@ export function FormTextarea({
   ...rest
 }: FormTextareaProps) {
   const inputId = id ?? `field-${name}`;
-  const [currentLength, setCurrentLength] = useState(() => {
-    if (typeof value === 'string') return value.length;
-    if (typeof defaultValue === 'string') return defaultValue.length;
-    return 0;
-  });
+  const [uncontrolledLength, setUncontrolledLength] = useState(() =>
+    typeof defaultValue === 'string' ? defaultValue.length : 0
+  );
+  const currentLength = typeof value === 'string' ? value.length : uncontrolledLength;
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setCurrentLength(e.target.value.length);
+    setUncontrolledLength(e.target.value.length);
     onChange?.(e);
   };
 

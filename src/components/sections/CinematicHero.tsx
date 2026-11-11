@@ -84,6 +84,30 @@ export function CinematicHero({
     }, 2000);
   };
 
+  // Open portal automatically when landing on a hash target (e.g. /#contact from /nfc)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const hash = window.location.hash;
+    const hasNfcParam = window.location.search.includes('nfc=');
+    if (!hash && !hasNfcParam) return;
+
+    const rafId = window.requestAnimationFrame(() => {
+      setIsOpened(true);
+      window.dispatchEvent(new CustomEvent('uic:hero-open'));
+      if (hash) {
+        const targetId = hash.slice(1);
+        window.setTimeout(() => {
+          const el = document.getElementById(targetId);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+          window.dispatchEvent(new CustomEvent('uic:interest'));
+        }, 120);
+      }
+    });
+    return () => window.cancelAnimationFrame(rafId);
+  }, []);
+
   // Sync with document state, lock body scroll when closed, and manage scroll restoration on refresh
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -94,7 +118,8 @@ export function CinematicHero({
 
     document.documentElement.setAttribute('data-hero-opened', isOpened ? 'true' : 'false');
 
-    if (!isOpened) {
+    const hasIncomingTarget = Boolean(window.location.hash || window.location.search.includes('nfc='));
+    if (!isOpened && !hasIncomingTarget) {
       window.scrollTo(0, 0);
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';

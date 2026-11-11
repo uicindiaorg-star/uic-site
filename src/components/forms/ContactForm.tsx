@@ -1,7 +1,13 @@
 'use client';
 
 import { useEffect, useState, type FormEvent } from 'react';
-import { ArrowUpRight, Check } from 'lucide-react';
+import { ArrowUpRight, Check, CreditCard, X } from 'lucide-react';
+import {
+  clearNfcInquiryDraft,
+  formatNfcDraftMessage,
+  readNfcInquiryDraft,
+  type NfcInquiryDraft,
+} from '@/lib/nfc-inquiry';
 import { FormInput } from './FormInput';
 import { FormTextarea } from './FormTextarea';
 import { ServiceSelector } from './ServiceSelector';
@@ -26,26 +32,51 @@ export function ContactForm() {
   const [submittedBrief, setSubmittedBrief] = useState<SubmittedBrief | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [service, setService] = useState('Brand & identity');
+  const [senderName, setSenderName] = useState('');
+  const [senderEmail, setSenderEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [nfcDraft, setNfcDraft] = useState<NfcInquiryDraft | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    const readInterest = () => setService('NFC & connected products');
+    const applyDraft = () => {
+      const draft = readNfcInquiryDraft();
+      if (!draft) return;
+      setNfcDraft(draft);
+      setService('NFC & connected products');
+      if (draft.isCustomName && draft.cardName) {
+        setSenderName((prev) => prev || draft.cardName);
+      }
+      setMessage((prev) => (prev.trim() ? prev : formatNfcDraftMessage(draft)));
+    };
+
+    const rafId = window.requestAnimationFrame(applyDraft);
+    const readInterest = () => {
+      setService('NFC & connected products');
+      applyDraft();
+    };
     window.addEventListener('uic:interest', readInterest);
-    return () => window.removeEventListener('uic:interest', readInterest);
+    return () => {
+      window.cancelAnimationFrame(rafId);
+      window.removeEventListener('uic:interest', readInterest);
+    };
   }, []);
+
+  function dismissNfcDraft() {
+    clearNfcInquiryDraft();
+    setNfcDraft(null);
+  }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const form = event.currentTarget;
     setIsSubmitting(true);
     setSubmitError(null);
     setSubmittedBrief(null);
 
-    const formData = new FormData(form);
-    const name = String(formData.get('name') ?? '').trim();
-    const email = String(formData.get('email') ?? '').trim();
-    const selectedService = String(formData.get('service') ?? service).trim();
-    const message = String(formData.get('message') ?? '').trim();
+    const name = senderName.trim();
+    const email = senderEmail.trim();
+    const selectedService = service.trim();
+    const note = message.trim();
 
     try {
       const response = await fetch('/api/contact', {
@@ -55,7 +86,7 @@ export function ContactForm() {
           name,
           email,
           service: selectedService,
-          message,
+          message: note,
         }),
       });
 
@@ -76,7 +107,11 @@ export function ContactForm() {
         service: selectedService,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       });
-      form.reset();
+      clearNfcInquiryDraft();
+      setNfcDraft(null);
+      setSenderName('');
+      setSenderEmail('');
+      setMessage('');
       setService('Brand & identity');
     } catch {
       setSubmitError('Network error while sending your inquiry. Please try again.');
@@ -96,9 +131,57 @@ export function ContactForm() {
         <div className={styles.brandMark}>
           uic<span>®</span>
         </div>
-        <span className={styles.cardType}>PROJECT BRIEF · INTAKE</span>
+        <span className={styles.cardType}>
+          {nfcDraft
+            ? nfcDraft.intent === 'physical_order'
+              ? 'NFC PHYSICAL ORDER · INTAKE'
+              : 'NFC CUSTOM DESIGN · INTAKE'
+            : 'PROJECT BRIEF · INTAKE'}
+        </span>
         <span className={styles.signal}>)))</span>
       </div>
+
+      {nfcDraft ? (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 10,
+            padding: '10px 14px',
+            marginBottom: 18,
+            borderRadius: 10,
+            background: 'rgba(44, 255, 5, 0.08)',
+            border: '1px solid rgba(44, 255, 5, 0.28)',
+            fontSize: 12,
+            color: '#EDE7DC',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+            <CreditCard size={16} color="var(--accent)" style={{ flexShrink: 0 }} />
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              Attached NFC Card: <strong>{nfcDraft.styleName}</strong> · {nfcDraft.finishName} (
+              {nfcDraft.cardColor}) — <strong>{nfcDraft.cardName}</strong>
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={dismissNfcDraft}
+            aria-label="Clear attached NFC card details"
+            style={{
+              background: 'transparent',
+              border: 0,
+              color: 'rgba(237, 231, 220, 0.72)',
+              cursor: 'pointer',
+              display: 'inline-flex',
+              padding: 4,
+              flexShrink: 0,
+            }}
+          >
+            <X size={14} />
+          </button>
+        </div>
+      ) : null}
 
       <div className={styles.row}>
         <FormInput
@@ -108,6 +191,8 @@ export function ContactForm() {
           autoComplete="name"
           required
           maxLength={120}
+          value={senderName}
+          onChange={(e) => setSenderName(e.target.value)}
         />
         <FormInput
           name="email"
@@ -117,6 +202,8 @@ export function ContactForm() {
           autoComplete="email"
           required
           maxLength={254}
+          value={senderEmail}
+          onChange={(e) => setSenderEmail(e.target.value)}
         />
       </div>
 
@@ -132,9 +219,11 @@ export function ContactForm() {
         name="message"
         label="A little about your project"
         placeholder="Your idea, ambition, timeline, or challenge…"
-        rows={3}
+        rows={nfcDraft ? 8 : 3}
         required
         maxLength={5000}
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
       />
 
       <button className={styles.submitButton} type="submit" disabled={isSubmitting}>
