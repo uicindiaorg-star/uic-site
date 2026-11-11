@@ -8,6 +8,10 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: 'Admin Login — UIC Studio CMS',
   description: 'Sign in to manage UIC Studio content, media, and client inquiries.',
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default async function LoginPage() {

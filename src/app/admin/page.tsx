@@ -20,6 +20,10 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: 'Admin Dashboard — UIC Studio CMS',
   description: 'Manage client contact inquiries, website content, projects, services, and media.',
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default async function AdminPage() {
